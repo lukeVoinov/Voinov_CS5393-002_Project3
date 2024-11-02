@@ -14,9 +14,22 @@ int main(){
         cin >> str;
 
         tr.insertLetter(root, str, 4);
+
+        if( tr.searchWord(root, str) ) {
+            cout << "Word found!";
+        }
+
         i++;
     }
 
+    i = 0;
+    while ( i < 3){
+        cin >> str;
+        if( tr.searchWord(root, str) ) {
+                cout << str << " found!";
+            }
+        else{ cout << str << " not found!";  }
+    }
     
 
 
