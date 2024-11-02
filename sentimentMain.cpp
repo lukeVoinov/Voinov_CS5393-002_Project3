@@ -1,5 +1,6 @@
 #include <iostream>
 #include "trie.h"
+#include <fstream> 
 using namespace std;
 
 int main(){
@@ -8,6 +9,12 @@ int main(){
     TrieNode* root = new TrieNode();
     int i = 0;
     string str;
+    ofstream sTrain("train_dataset_20k.csv");
+    
+    if(!sTrain.is_open()){
+        cout << "File is not open!!";
+        return -1;
+    }
 
     while( i < 5){
         cout << "Say a word: " << endl;
