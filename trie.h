@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #pragma once
 using namespace std;
 
@@ -57,6 +59,25 @@ struct TrieNode{
         // Return true if the word exists 
         // and is marked as ending
         return curr->endOfWord;
+    }
+
+    vector<string> parseSentence(string sent){
+        vector<string> words;
+        string word;
+        int j, i = 0;
+
+        for(i = 0; i < sent.length(); i++){
+            if(sent.at(i) == ' '){ 
+                word = sent.substr(j, i-j-1);
+                words.push_back(word);
+            }
+            else if( i+1 >= sent.length() ) { //>= could arbitraily be ==
+                word = sent.substr(j, i-j);
+                words.push_back(word);
+            }
+        }
+
+        return words;
     }
 };
 
