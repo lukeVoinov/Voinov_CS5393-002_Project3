@@ -7,26 +7,28 @@ int main(){
 
     TrieNode tr;
     TrieNode* root = new TrieNode();
-    int i = 0;
+    int i = 0, sentiment;
     string str;
-    ofstream sTrain("train_dataset_20k.csv");
-    
+    ifstream sTrain("train_dataset_20k.csv");
+
+
     if(!sTrain.is_open()){
         cout << "File is not open!!";
         return -1;
     }
+    else{
+        cout << "file open ;O";
+    }
 
-    while( i < 5){
-        cout << "Say a word: " << endl;
-        cin >> str;
-
-        tr.insertLetter(root, str, 4);
-
-        if( tr.searchWord(root, str) ) {
-            cout << "Word found!";
+    while(!sTrain.eof()){
+        if(i == 0){
+            getline(sTrain, str);
+            sentiment = stoi(str);
         }
-
-        i++;
+        else if(i % 7 == 0){
+            getline(sTrain, str);
+            
+        }
     }
 
     i = 0;
