@@ -28,7 +28,7 @@ int main(){
             //sentiment = stoi(str);
         }
         else if(findCol % 5 == 0){ // to find the fifth column in each row
-            getline(sTrain, str);
+            getline(sTrain, str, ',');
             words = tr.parseSentence(str);
             for(unsigned int i = 0; i < words.size(); i++){
                 tr.insertLetter(root, words.at(i), sentiment);
