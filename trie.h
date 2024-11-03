@@ -8,7 +8,8 @@ struct TrieNode{
 
     TrieNode* leaf[26];
 
-    int sentiment;
+    int sentiment, maxPos, maxNeg = 0;
+    string posWord, negWord;
     bool endOfWord;
 
     TrieNode(){
@@ -20,6 +21,7 @@ struct TrieNode{
 
     void insertLetter(TrieNode* root, string word, int sent){
         TrieNode* curr = root;
+        string tempStr = "";
 
         for(char c : word){
 
@@ -29,11 +31,23 @@ struct TrieNode{
                 curr->leaf[c - 'a'] = newNode;
             }
 
+            tempStr += c;
             curr = curr->leaf[c - 'a'];
         }
-
+        if(sent == 0){
+            sent = -4;
+        }
         curr->endOfWord = true;
-        curr->sentiment += sent;
+        curr->sentiment += sent; // add sent to show how positive relative to the other words this word is
+
+        if(curr->sentiment > maxPos){
+            maxPos = curr->sentiment;
+            posWord = tempStr;
+        }
+        else if(curr->sentiment < maxNeg){
+            maxNeg = curr->sentiment;
+            negWord = tempStr;
+        }
     }
 
     // Method to search a key in the Trie
@@ -78,6 +92,11 @@ struct TrieNode{
         }
 
         return words;
+    }
+
+    void mostChargedWords(){
+        cout << "Most Negative: " << negWord << " -> " << maxNeg << endl
+             << "Most Positive: " << posWord << " -> " << maxPos << endl;
     }
 };
 
