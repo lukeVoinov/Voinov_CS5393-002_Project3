@@ -23,6 +23,8 @@ struct TrieNode{
         TrieNode* curr = root;
         string tempStr = "";
 
+        cout << " Word" << word << endl;
+
         for(char c : word){
 
             if(curr->leaf[c - 'a'] == nullptr){ // 'a' corresponds to 0
@@ -78,20 +80,52 @@ struct TrieNode{
     vector<string> parseSentence(string sent){
         vector<string> words;
         string word;
-        int j, i = 0;
+        unsigned int j = 0;
+        unsigned int i = 0;
 
-        for(i = 0; i < sent.length(); i++){
+        for(i = 0; i < sent.length(); i++){ //"mary is"
+
             if(sent.at(i) == ' '){ 
-                word = sent.substr(j, i-j-1);
+                word = sent.substr(j, i-j);
+                word = parseWord(word);
+                j = i+1;
                 words.push_back(word);
             }
-            else if( i+1 >= sent.length() ) { //>= could arbitraily be ==
-                word = sent.substr(j, i-j);
+            else if( i+1 >= sent.length()){
+                word = sent.substr(j, i-j + 1);
+                word = parseWord(word);
                 words.push_back(word);
             }
         }
 
         return words;
+    }
+
+    string parseWord(string word){
+        string w = "";
+        for(int i = 0; i < word.length(); i++){
+            switch(word.at(i)){
+                case '\'':
+                break;
+                case '[':
+                break;
+                case ']':
+                break;
+                case '(':
+                break;
+                case ')':
+                break;
+                case '"':
+                break;
+                case ',':
+                break;
+                case '.':
+                break;
+                default:
+                    w += word.at(i);
+            }
+        }
+        return w;
     }
 
     void mostChargedWords(){

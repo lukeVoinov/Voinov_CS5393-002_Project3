@@ -7,10 +7,11 @@ int main(){
 
     TrieNode tr;
     TrieNode* root = new TrieNode();
-    int findCol = 0, sentiment;
+    unsigned int findCol = 0;
+    int sentiment;
     string str;
     vector<string> words;
-    ifstream sTrain("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/train_dataset_20k.csv");
+    ifstream sTrain("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/train_dataset_20k_modified.csv");
 
 
     if(!sTrain.is_open()){
@@ -20,21 +21,26 @@ int main(){
     else{
         cout << "file open ;O\n\n";
     }
+    
+    getline(sTrain, str);//ignore headers
 
-    while( getline(sTrain, str) ){
-        if(findCol % 6 == 0){ // to find the first column in each row
-            getline(sTrain, str);
-            cout << "String is: " << str << endl;
-            //sentiment = stoi(str);
-        }
-        else if(findCol % 5 == 0){ // to find the fifth column in each row
+    while( !sTrain.eof() ){
+        if(findCol == 0){ // to find the first column in each row
             getline(sTrain, str, ',');
+            sentiment = stoi(str);
+        }
+        else if(findCol != 5){
+            getline(sTrain, str, ',');
+        }
+        else if(findCol == 5){ // to find the fifth column in each row
+            getline(sTrain,str);
             words = tr.parseSentence(str);
-            for(unsigned int i = 0; i < words.size(); i++){
+            for(int i = 0; i < words.size(); i++){
                 tr.insertLetter(root, words.at(i), sentiment);
 
                 cout << "Inserted: [ " << words.at(i) << " ]" << endl;
             }
+            findCol = -1;
         }
         findCol++;
     }
