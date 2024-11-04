@@ -34,6 +34,7 @@ int main(){
         }
         else if(findCol == 5){ // to find the fifth column in each row
             getline(sTrain,str);
+
             words = tr.parseSentence(str);
             for(int i = 0; i < words.size(); i++){
                 tr.insertLetter(root, words.at(i), sentiment);
