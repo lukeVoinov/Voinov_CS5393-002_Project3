@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <fstream>
 #pragma once
 using namespace std;
 
@@ -74,5 +75,33 @@ struct TrieNode {
     void mostChargedWords() const {
         cout << "Most Negative: " << negWord << " -> " << maxNeg << endl
              << "Most Positive: " << posWord << " -> " << maxPos << endl;
+    }
+
+    void analyzeWord(TrieNode* root, const string& word, vector<int>& vec) {
+
+        TrieNode* curr = root;
+        for (char c : word) {
+            curr = curr->leaf[c];
+        }
+        if(curr->endOfWord){
+            if(curr->sentiment >= 0){
+                vec.at(0) += curr->sentiment;
+            }
+            else {
+                vec.at(1) += curr->sentiment; 
+            }
+        }
+
+        for(int i = 0; vec.at(i); i++){
+            //cout << "vecto: " << vec.at(i) << endl;
+        }
+    }
+    
+    double calculateSigmoidApprox(int x){
+        double f_x = 0.0;
+
+        f_x = double(x) / double ( (1 + abs(x)) );
+
+        return f_x;
     }
 };
