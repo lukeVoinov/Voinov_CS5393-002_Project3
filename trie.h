@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <fstream>
+#include <math.h> 
 #pragma once
 using namespace std;
 
@@ -25,7 +26,7 @@ struct TrieNode {
             curr = curr->leaf[c];
         }
         curr->endOfWord = true;
-        curr->sentiment += (sent == 0) ? -4 : sent;
+        curr->sentiment += (sent == 0) ? -3 : sent;
 
         if (curr->sentiment > maxPos) {
             maxPos = curr->sentiment;
@@ -77,13 +78,15 @@ struct TrieNode {
              << "Most Positive: " << posWord << " -> " << maxPos << endl;
     }
 
-    void analyzeWord(TrieNode* root, const string& word, vector<int>& vec) {
+    vector<int> analyzeWord(TrieNode* root, const string& word, vector<int> vec) {
 
         TrieNode* curr = root;
         for (char c : word) {
-            curr = curr->leaf[c];
+            if(curr->leaf[c]){
+                curr = curr->leaf[c];
+            }
         }
-        if(curr->endOfWord){
+        if(curr->endOfWord == true){
             if(curr->sentiment >= 0){
                 vec.at(0) += curr->sentiment;
             }
@@ -92,15 +95,13 @@ struct TrieNode {
             }
         }
 
-        for(int i = 0; vec.at(i); i++){
-            //cout << "vecto: " << vec.at(i) << endl;
-        }
+        return vec;
     }
     
-    double calculateSigmoidApprox(int x){
+    double normalize(int x){
         double f_x = 0.0;
 
-        f_x = double(x) / double ( (1 + abs(x)) );
+        f_x = 20 * log10(x);
 
         return f_x;
     }
