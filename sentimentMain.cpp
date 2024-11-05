@@ -67,7 +67,7 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root){
     int pSent = 0, findCol = 0;
     string str;
     vector<string> words;
-    vector<int> posAndNeg = {0,0}, allPredictions;
+    vector<int> posAndNeg = {0,0}, allPredictions = {0};
     double posPredict = 0.0, negPredict = 0.0 , total = 0.0;
 
     ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_10k.csv");
@@ -91,19 +91,22 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root){
             getline(sTest,str);
 
             words = tr.parseSentence(str);
-            for(int i = 0; i < words.size(); i++){
-                tr.analyzeWord(root, words.at(i), posAndNeg);
-                //cout << "Analyzed: [ " << words.at(i) << " ]" << endl;
+            for(int j = 0; j < words.size(); j++){
+                //cout << "Analyzed: [ " << words.at(j) << " ]" << endl;
+                posAndNeg = tr.analyzeWord(root, words.at(j), posAndNeg);
             }
-            posPredict = tr.calculateSigmoidApprox(posAndNeg.at(0));
-            negPredict = tr.calculateSigmoidApprox(posAndNeg.at(1));
+            posPredict = tr.normalize(posAndNeg.at(0));
+            negPredict = tr.normalize(-posAndNeg.at(1)) + 0.2 * tr.normalize(-posAndNeg.at(1)) ;
             total = posPredict - negPredict;
+
+            //cout << " Pos: " << posPredict << " Neg: "<< negPredict << " total: " << total << endl;
 
             if(total >= 0){ pSent = 4; }
             else{ pSent = 0; }
             allPredictions.push_back(pSent);
 
             findCol = -1;
+            posAndNeg = {0,0};
         }
         findCol++;
     }
@@ -115,16 +118,21 @@ double findAccuracy(vector<int> pS){
 
     ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_sentiment_10k.csv");
     string str;
-    int total = 0, average = 0;
+    int total = 0;
+    double average = 0;
 
-    for(int i = 0; i < pS.size(); i++){
+    getline(sTest, str);
+
+    for(int i = 0; i < pS.size()-1; i++){
         getline(sTest, str, ',');
         if(pS.at(i) == stoi( str ) ){
             total++;
         }
+        getline(sTest, str);
     }
 
-    average = double(total) / double( pS.size() );
+    average = double(total) / double( pS.size() -1 );
 
     return average;
 }
+
