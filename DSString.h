@@ -1,5 +1,3 @@
-#ifndef DSSTRING_H // Include guard to prevent multiple inclusions
-#define DSSTRING_H // Include guard to prevent multiple inclusions
 #pragma once
 
 #include <iostream> // Include iostream for input/output operations
@@ -120,18 +118,12 @@ public:
     DSString substring(size_t start, size_t numChars) const;
 
     /**
-     * @brief Get substring from start to end
+     * @brief Get entire word.
      * @param start Starting position.
      * @return Substring as a new DSString object.
      */
     DSString substring(size_t start) const;
-
-    /**
-     * @brief Add a character to a DSString
-     * @param char c Letter to be appended
-     * @return DSString composed of specific letters
-     */
-    DSString append(char c);
+    
 
     /**
      * @brief Convert to lowercase.
@@ -212,6 +204,8 @@ public:
      * @return Position of the first occurrence, or npos if not found.
      */
     size_t find(char c, size_t pos = 0) const;
+
+    
 
     /**
      * @brief Append DSString.
@@ -358,5 +352,3 @@ public:
      */
     friend std::istream &getline(std::istream &is, DSString &str);
 };
-
-#endif // End of include guard

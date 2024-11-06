@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
-#include <string>
 #include <unordered_map>
 #include <fstream>
-#include <math.h> 
+#include "DSString.h"
+#include <cmath> 
 #pragma once
 using namespace std;
 
@@ -12,12 +12,12 @@ struct TrieNode {
     int sentiment = 0;
     int maxPos = 0;
     int maxNeg = 0;
-    string posWord, negWord;
+    DSString posWord, negWord;
     bool endOfWord;
 
     TrieNode() : endOfWord(false) {}
 
-    void insertLetter(TrieNode* root, const string& word, int sent) {
+    void insertLetter(TrieNode* root, const DSString& word, int sent) {
         TrieNode* curr = root;
         for (char c : word) {
             if (curr->leaf.find(c) == curr->leaf.end()) {
@@ -37,37 +37,39 @@ struct TrieNode {
         }
     }
 
-    bool searchWord(TrieNode* root, const string& key) const {
+    bool searchWord(TrieNode* root, const DSString& key) const {
         TrieNode* curr = root;
         for (char c : key) {
-            if (curr->leaf.find(c) == curr->leaf.end())
+            auto it = curr->leaf.find(c);
+            if (it == curr->leaf.end())
                 return false;
-            curr = curr->leaf[c];
+            curr = it->second;
         }
         return curr->endOfWord;
     }
 
-    vector<string> parseSentence(const string& sent) const {
-        vector<string> words;
-        string word;
+    vector<DSString> parseSentence(const DSString& sent) const {
+        vector<DSString> words;
+        words.reserve(10); // Reserve space to avoid multiple reallocations
+        DSString word;
         size_t start = 0, end = 0;
 
         while ((end = sent.find(' ', start)) != string::npos) {
-            word = parseWord(sent.substr(start, end - start));
+            word = parseWord(sent.substring(start, end - start));
             words.push_back(word);
             start = end + 1;
         }
-        word = parseWord(sent.substr(start));
+        word = parseWord(sent.substring(start));
         words.push_back(word);
 
         return words;
     }
 
-    string parseWord(const string& word) const {
-        string w;
+    DSString parseWord(const DSString& word) const {
+        DSString w;
         for (char c : word) {
             if (isalnum(c)) {
-                w += tolower(c);
+                w.append(DSString(1, tolower(c)));
             }
         }
         return w;
@@ -78,31 +80,28 @@ struct TrieNode {
              << "Most Positive: " << posWord << " -> " << maxPos << endl;
     }
 
-    vector<int> analyzeWord(TrieNode* root, const string& word, vector<int> vec) {
-
+    vector<int> analyzeWord(TrieNode* root, const DSString& word, vector<int>& vec) const {
         TrieNode* curr = root;
         for (char c : word) {
-            if(curr->leaf[c]){
-                curr = curr->leaf[c];
+            auto it = curr->leaf.find(c);
+            if (it != curr->leaf.end()) {
+                curr = it->second;
+            } else {
+                return vec;
             }
         }
-        if(curr->endOfWord == true){
-            if(curr->sentiment >= 0){
-                vec.at(0) += curr->sentiment;
-            }
-            else {
-                vec.at(1) += curr->sentiment; 
+        if (curr->endOfWord) {
+            if (curr->sentiment >= 0) {
+                vec[0] += curr->sentiment;
+            } else {
+                vec[1] += curr->sentiment; 
             }
         }
 
         return vec;
     }
     
-    double normalize(int x){
-        double f_x = 0.0;
-
-        f_x = 20 * log10(x);
-
-        return f_x;
+    inline double normalize(int x) const {
+        return 20 * log10(x);
     }
 };
