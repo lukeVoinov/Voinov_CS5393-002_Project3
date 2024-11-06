@@ -1,3 +1,5 @@
+Accuracy: 0.711229
+
 Predicted,Sentiment,id
 4,0,2002781955
 4,4,1678880603

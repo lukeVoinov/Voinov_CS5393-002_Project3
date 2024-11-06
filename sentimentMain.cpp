@@ -16,7 +16,7 @@ int main() {
     int sentiment; // Declare an integer variable for sentiment
     DSString str; // Declare a DSString variable for reading strings
     vector<DSString> words; // Declare a vector to store words
-    ifstream sTrain("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/train_dataset_20k_modified.csv"); // Open the training dataset file
+    ifstream sTrain("train_dataset_20k_modified.csv"); // Open the training dataset file
     vector<int> predictedSentiments; // Declare a vector to store predicted sentiments
     double accuracy = 0.0; // Initialize accuracy to 0.0
 
@@ -60,7 +60,7 @@ int main() {
     cout << "The accuracy is: " << accuracy << endl; // Print the accuracy
 
     // Write predictions to a CSV file
-    writePredictionsToCSV(predictedSentiments, "C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/predictedSentiments.txt"); // Call the function to write predictions to a CSV file
+    //writePredictionsToCSV(predictedSentiments, "predictedSentiments.txt", accuracy); // Call the function to write predictions to a CSV file
 
     return 0; // Return 0 to indicate successful execution
 }
@@ -73,7 +73,7 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
     vector<int> posAndNeg = {0, 0}, allPredictions = {0}; // Initialize vectors for positive/negative counts and predictions
     double posPredict = 0.0, negPredict = 0.0, total = 0.0; // Initialize prediction variables
 
-    ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_10k.csv"); // Open the test dataset file
+    ifstream sTest("test_dataset_10k.csv"); // Open the test dataset file
     if (!sTest.is_open()) {
         cout << "File is not open!!"; // Print an error message if the file is not open
         return {-1}; // Return -1 to indicate an error
@@ -114,7 +114,7 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
 
 // Function to calculate accuracy
 double findAccuracy(const vector<int>& pS) {
-    ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_sentiment_10k.csv"); // Open the test dataset file with actual sentiments
+    ifstream sTest("test_dataset_sentiment_10k.csv"); // Open the test dataset file with actual sentiments
     DSString str; // Declare a DSString variable for reading strings
     int total = 0; // Initialize total to 0
     double average = 0; // Initialize average to 0
@@ -136,9 +136,9 @@ double findAccuracy(const vector<int>& pS) {
 }
 
 // Function to write predictions to a CSV file
-void writePredictionsToCSV(const vector<int>& predictions, const string& filename) {
+void writePredictionsToCSV(const vector<int>& predictions, const string& filename, double acc) {
     ofstream outFile(filename); // Open the output file
-    ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_sentiment_10k.csv");
+    ifstream sTest("test_dataset_sentiment_10k.csv");
     DSString str;
     int count = 0;
     // Check if the file is open
@@ -148,6 +148,7 @@ void writePredictionsToCSV(const vector<int>& predictions, const string& filenam
     }
 
     getline(sTest,str);
+    outFile << "Accuracy: " << acc << endl << endl;
     outFile << "Predicted," << str << endl;
     // Write predictions to the file
     for (int i = 1; i < predictions.size(); i++) {
