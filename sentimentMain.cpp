@@ -5,10 +5,9 @@
 using namespace std;
 
 vector<int> predictSentiment(TrieNode tr, TrieNode* root);
-double findAccuracy(vector<int> pS);
+double findAccuracy(const vector<int>& pS);
 
 int main() {
-    cout << "Bakka" << endl;
     TrieNode tr;
     TrieNode* root = new TrieNode();
     unsigned int findCol = 0;
@@ -85,18 +84,18 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
 
             words = tr.parseSentence(str);
             for (int j = 0; j < words.size(); j++) {
-                // cout << "Analyzed: [ " << words.at(j) << " ]" << endl;
+                //cout << "Analyzed: [ " << words.at(j) << " ]" << endl;
                 posAndNeg = tr.analyzeWord(root, words.at(j), posAndNeg);
             }
             posPredict = tr.normalize(posAndNeg.at(0));
-            negPredict = tr.normalize(-posAndNeg.at(1)) +  1.1 * tr.normalize(-posAndNeg.at(1));
+            negPredict = tr.normalize(-posAndNeg.at(1)) +  1.5 * tr.normalize(-posAndNeg.at(1));
             total = posPredict - negPredict;
-
+            //71.12
             //cout << " Pos: " << posPredict << " Neg: "<< negPredict << " total: " << total << endl;
-            
 
             if (total >= 0) { pSent = 4; }
             else { pSent = 0; }
+
             allPredictions.push_back(pSent);
 
             findCol = -1;
@@ -126,14 +125,11 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
         findCol++;
         
    }*/
-    for (int p = 0; p < allPredictions.size(); p++){
-        cout << "Pred: " << allPredictions.at(p) << endl;
-        if(p == 10) { break; }
-    }
+
     return allPredictions;
 }
 
-double findAccuracy(vector<int> pS) {
+double findAccuracy(const vector<int>& pS) {
     ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_sentiment_10k.csv");
     DSString str;
     int total = 0;
@@ -141,7 +137,7 @@ double findAccuracy(vector<int> pS) {
 
     getline(sTest, str);
 
-    for (int i = 1; i < pS.size() - 1; i++) {
+    for (int i = 1; i < pS.size() ; i++) {
         getline(sTest, str, ',');
         if (pS.at(i) == stoi(str.c_str())) {
             total++;
@@ -149,7 +145,7 @@ double findAccuracy(vector<int> pS) {
         getline(sTest, str);
     }
 
-    average = double(total) / double(pS.size() - 1);
+    average = double(total) / double(pS.size() );
 
     return average;
 }

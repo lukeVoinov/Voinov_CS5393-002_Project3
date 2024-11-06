@@ -26,7 +26,7 @@ struct TrieNode {
             curr = curr->leaf[c];
         }
         curr->endOfWord = true;
-        curr->sentiment += (sent == 0) ? -3 : sent;
+        curr->sentiment += (sent == 0) ? -2.5 : sent;
 
         if (curr->sentiment > maxPos) {
             maxPos = curr->sentiment;
@@ -82,6 +82,7 @@ struct TrieNode {
 
     vector<int> analyzeWord(TrieNode* root, const DSString& word, vector<int>& vec) const {
         TrieNode* curr = root;
+
         for (char c : word) {
             auto it = curr->leaf.find(c);
             if (it != curr->leaf.end()) {
@@ -102,6 +103,6 @@ struct TrieNode {
     }
     
     inline double normalize(int x) const {
-        return 20 * log10(x);
+        return log10(x);
     }
 };

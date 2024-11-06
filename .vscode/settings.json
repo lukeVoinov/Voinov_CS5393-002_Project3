@@ -5,6 +5,7 @@
         "*.csv": "csv",
         "iosfwd": "cpp",
         "iostream": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "cmath": "cpp"
     }
 }
