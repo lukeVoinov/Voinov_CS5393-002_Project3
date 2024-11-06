@@ -67,7 +67,7 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
     double posPredict = 0.0, negPredict = 0.0, total = 0.0;
 
     ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_10k.csv");
-
+    //ifstream sTest("C:/Users/lukev/Projects/Data Structures/Voinov_CS5393-002_Project3/test_dataset_sentiment_10k.csv");
     if (!sTest.is_open()) {
         cout << "File is not open!!";
         return {-1};
@@ -89,10 +89,11 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
                 posAndNeg = tr.analyzeWord(root, words.at(j), posAndNeg);
             }
             posPredict = tr.normalize(posAndNeg.at(0));
-            negPredict = tr.normalize(-posAndNeg.at(1)) + 0.2 * tr.normalize(-posAndNeg.at(1));
+            negPredict = tr.normalize(-posAndNeg.at(1)) +  1.1 * tr.normalize(-posAndNeg.at(1));
             total = posPredict - negPredict;
 
-            // cout << " Pos: " << posPredict << " Neg: "<< negPredict << " total: " << total << endl;
+            //cout << " Pos: " << posPredict << " Neg: "<< negPredict << " total: " << total << endl;
+            
 
             if (total >= 0) { pSent = 4; }
             else { pSent = 0; }
@@ -102,8 +103,33 @@ vector<int> predictSentiment(TrieNode tr, TrieNode* root) {
             posAndNeg = {0, 0};
         }
         findCol++;
-    }
+    } 
 
+   /*while(!sTest.eof()){ // test if the logic is sound
+        if(findCol == 0){
+            getline(sTest, str, ',');
+            if(str == "4"){ posAndNeg.at(0) = stoi(str.c_str());}
+            else{ posAndNeg.at(1) = stoi(str.c_str()) + 4; }
+            posPredict = tr.normalize(posAndNeg.at(0));
+            negPredict = tr.normalize(posAndNeg.at(1));
+            total = posPredict - negPredict;
+
+            if(total >= 0) { pSent = 4;}
+            else { pSent = 0; }
+
+            allPredictions.push_back(pSent);
+
+            findCol = -1;
+            posAndNeg = {0, 0};
+        }
+        if(findCol != 0){ getline(sTest, str); }
+        findCol++;
+        
+   }*/
+    for (int p = 0; p < allPredictions.size(); p++){
+        cout << "Pred: " << allPredictions.at(p) << endl;
+        if(p == 10) { break; }
+    }
     return allPredictions;
 }
 
@@ -115,7 +141,7 @@ double findAccuracy(vector<int> pS) {
 
     getline(sTest, str);
 
-    for (int i = 0; i < pS.size() - 1; i++) {
+    for (int i = 1; i < pS.size() - 1; i++) {
         getline(sTest, str, ',');
         if (pS.at(i) == stoi(str.c_str())) {
             total++;
